@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SearchBox from '../components/molecules/SearchBox';
-import Card from '../components/atoms/Card';
+import UserCard from '../components/UserCard';
 import Button from '../components/atoms/Button';
-import Avatar from '../components/atoms/Avatar';
+import Card from '../components/atoms/Card';
 
 function UserSearchPage() {
   const [query, setQuery] = useState('');
@@ -11,13 +11,6 @@ function UserSearchPage() {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState('activity');
-
-  // צבעים לאווטרים
-  const avatarColors = [
-    '#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe',
-    '#43e97b', '#38f9d7', '#ffecd2', '#fcb69f', '#a8edea', '#fed6e3',
-    '#ff9a9e', '#fecfef', '#ffecd2', '#fcb69f', '#667eea', '#764ba2'
-  ];
 
   // נתונים דמיוניים מורחבים
   const dummyUsers = [
@@ -200,7 +193,8 @@ function UserSearchPage() {
     if (query.trim()) {
       filtered = filtered.filter((user) =>
         user.name.toLowerCase().includes(query.toLowerCase()) ||
-        user.email.toLowerCase().includes(query.toLowerCase())
+        user.email.toLowerCase().includes(query.toLowerCase()) ||
+        user.profession.toLowerCase().includes(query.toLowerCase())
       );
     }
 
@@ -228,7 +222,6 @@ function UserSearchPage() {
   if (isLoading) {
     return (
       <div className="loading-container">
-        {/* אלמנטים דקורטיביים */}
         <div className="page-background">
           <div className="floating-element floating-element-1"></div>
           <div className="floating-element floating-element-2"></div>
@@ -273,89 +266,70 @@ function UserSearchPage() {
             <SearchBox
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="חפש לפי שם או כתובת אימייל..."
+              placeholder="חפש לפי שם, מקצוע או אימייל..."
               icon="🔍"
             />
           </div>
         </div>
 
-        {/* כפתורי סינון */}
-        <div className="filter-container">
-          {['הכל', 'חברים', 'משתמשים חדשים', 'מחוברים כעת'].map((type) => (
-            <Button
-              key={type}
-              variant={filterType === type ? 'primary' : 'outline'}
-              size="sm"
-              onClick={() => setFilterType(type)}
-              className={`filter-button ${filterType === type ? 'active' : ''}`}>
-              <span className="ms-1">
-                {type === 'הכל' && '👥'} 
-                {type === 'חברים' && '🤝'} 
-                {type === 'משתמשים חדשים' && '✨'} 
-                {type === 'מחוברים כעת' && '🟢'}
-              </span>
-              {type}
-            </Button>
-          ))}
+        {/* פאנל סינון ומיון */}
+        <div className="row justify-content-center mb-5">
+          <div className="col-lg-10">
+            <Card variant="glass" className="p-3">
+              <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                {/* כפתורי סינון */}
+                <div className="filter-buttons-group">
+                  {['הכל', 'חברים', 'משתמשים חדשים', 'מחוברים כעת'].map((type) => (
+                    <Button
+                      key={type}
+                      variant={filterType === type ? 'primary' : 'outline'}
+                      size="sm"
+                      onClick={() => setFilterType(type)}
+                      className={`filter-button-compact ${filterType === type ? 'active' : ''}`}>
+                      <span>
+                        {type === 'הכל' && '👥'} 
+                        {type === 'חברים' && '🤝'} 
+                        {type === 'משתמשים חדשים' && '✨'} 
+                        {type === 'מחוברים כעת' && '🟢'}
+                      </span>
+                      {type}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* בורר מיון */}
+                <select 
+                  className="form-select filter-sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}>
+                  <option value="activity">⚡ הכי פעילים</option>
+                  <option value="alphabetical">🔤 לפי א-ב</option>
+                </select>
+              </div>
+            </Card>
+          </div>
         </div>
 
         {/* תוצאות */}
         {filteredUsers.length > 0 ? (
           <>
-            {/* מיון */}
+            {/* מספר תוצאות */}
             <div className="text-center mb-4">
-              <select 
-                className="form-select form-select-sm d-inline-block"
-                style={{ width: 'auto' }}
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}>
-                <option value="activity">הכי פעילים</option>
-                <option value="alphabetical">מיון א-ב</option>
-              </select>
+              <p className="loading-text mb-0">
+                נמצאו <span className="fw-bold">{filteredUsers.length}</span> משתמשים
+              </p>
             </div>
             
-            {/* רשימת משתמשים */}
-            <div className="row justify-content-center">
-              <div className="col-lg-10">
-                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                  <p className="text-white text-center mb-4 loading-text">
-                    נמצאו {filteredUsers.length} משתמשים
-                  </p>
-                  
-                  {filteredUsers.map((user, index) => (
-                    <Card key={user.id} variant="user" className="mb-3">
-                      <div className="d-flex align-items-center justify-content-between">
-                        <Button
-                          size="sm"
-                          variant={user.isFriend ? "secondary" : "primary"}
-                          onClick={() => handleAddFriend(user.id, user)}>
-                          {user.isOnline && <span className="ms-1">🟢</span>}
-                          {user.isFriend ? 'הסר חבר' : 'הוסף חבר'}
-                        </Button>
-                        
-                        <div className="d-flex align-items-center gap-3">
-                          <div style={{ textAlign: 'right' }}>
-                            <h5 className="mb-1 fw-bold">{user.name}</h5>
-                            <p className="mb-1 text-muted small">
-                              <span className="ms-1">💼</span>
-                              {user.profession}
-                            </p>
-                            <p className="mb-0 text-muted small">
-                              <span className="ms-1">✉️</span>
-                              {user.email}
-                            </p>
-                          </div>
-                          
-                          <Avatar
-                            name={user.name}
-                            color={avatarColors[index % avatarColors.length]}
-                            isOnline={user.isOnline}
-                          />
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+            {/* רשימת משתמשים בגריד */}
+            <div className="users-grid-container">
+              <div className="users-grid">
+                {filteredUsers.map((user) => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    onAddFriend={handleAddFriend}
+                  />
+                ))}
               </div>
             </div>
           </>
