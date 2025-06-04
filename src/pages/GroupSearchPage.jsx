@@ -1,4 +1,3 @@
-/* global $, confirm */
 import React, { useState, useEffect, useRef } from 'react';
 import SearchBox from '../components/molecules/SearchBox';
 import Card from '../components/atoms/Card';
@@ -24,7 +23,6 @@ function GroupSearchPage() {
   
   // HTML5 Canvas ref
   const canvasRef = useRef(null);
-  const videoRef = useRef(null);
 
   // קטגוריות לסינון
   const categories = [
@@ -72,12 +70,10 @@ function GroupSearchPage() {
   }, []);
 
   const loadGroupsWithJQuery = () => {
-    // שימוש ב-jQuery Ajax במקום setTimeout
     $.ajax({
-      url: '/api/groups', // בהמשך יוחלף ב-URL אמיתי
+      url: '/api/groups',
       method: 'GET',
       success: function(data) {
-        // כרגע משתמשים בנתונים דמיוניים
         setTimeout(() => {
           setGroups(dummyGroups);
           setFilteredGroups(dummyGroups);
@@ -86,7 +82,6 @@ function GroupSearchPage() {
       },
       error: function(xhr, status, error) {
         console.error('Error loading groups:', error);
-        // fallback לנתונים דמיוניים
         setGroups(dummyGroups);
         setFilteredGroups(dummyGroups);
         setIsLoading(false);
@@ -108,11 +103,9 @@ function GroupSearchPage() {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // רקע
       ctx.fillStyle = 'rgba(102, 126, 234, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // מעגלים מסתובבים
       ctx.save();
       ctx.translate(100, 100);
       ctx.rotate(rotation);
@@ -137,7 +130,6 @@ function GroupSearchPage() {
   useEffect(() => {
     let filtered = groups;
 
-    // סינון לפי קטגוריה
     if (selectedCategory !== 'הכל') {
       const categoryName = selectedCategory.split(' ')[1];
       filtered = filtered.filter(group => 
@@ -146,7 +138,6 @@ function GroupSearchPage() {
       );
     }
 
-    // סינון לפי חיפוש
     if (query.trim()) {
       filtered = filtered.filter(group =>
         group.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -154,37 +145,31 @@ function GroupSearchPage() {
       );
     }
 
-    // סינון מתקדם - 5 פרמטרים
     if (showAdvancedSearch) {
-      // 1. מספר חברים מינימלי
       if (advancedSearch.memberCountMin) {
         filtered = filtered.filter(group => 
           group.memberCount >= parseInt(advancedSearch.memberCountMin)
         );
       }
       
-      // 2. מספר חברים מקסימלי
       if (advancedSearch.memberCountMax) {
         filtered = filtered.filter(group => 
           group.memberCount <= parseInt(advancedSearch.memberCountMax)
         );
       }
       
-      // 3. פרטיות
       if (advancedSearch.privacy !== 'all') {
         filtered = filtered.filter(group => 
           group.privacy === advancedSearch.privacy
         );
       }
       
-      // 4. רמת פעילות
       if (advancedSearch.activityLevel !== 'all') {
         filtered = filtered.filter(group => 
           group.activity === advancedSearch.activityLevel
         );
       }
       
-      // 5. תאריך יצירה
       if (advancedSearch.createdAfter) {
         filtered = filtered.filter(group => 
           new Date(group.createdAt) >= new Date(advancedSearch.createdAfter)
@@ -192,7 +177,6 @@ function GroupSearchPage() {
       }
     }
 
-    // מיון
     switch (sortBy) {
       case 'popular':
         filtered.sort((a, b) => b.memberCount - a.memberCount);
@@ -210,9 +194,8 @@ function GroupSearchPage() {
     setFilteredGroups(filtered);
   }, [groups, query, selectedCategory, sortBy, advancedSearch, showAdvancedSearch]);
 
-  // פעולות CRUD - דרישה 19
+  // רק פעולת הצטרפות - הסרנו Update ו-Delete
   const handleJoinGroup = (groupId, group) => {
-    // jQuery Ajax לבקשת הצטרפות
     $.ajax({
       url: `/api/groups/${groupId}/join`,
       method: 'POST',
@@ -228,36 +211,6 @@ function GroupSearchPage() {
         alert('שגיאה בהצטרפות לקבוצה');
       }
     });
-  };
-
-  const handleUpdateGroup = (groupId) => {
-    // פונקציה לעדכון קבוצה - דרישה 19 Update
-    const newName = prompt('הכנס שם חדש לקבוצה:');
-    if (newName) {
-      $.ajax({
-        url: `/api/groups/${groupId}`,
-        method: 'PUT',
-        data: JSON.stringify({ name: newName }),
-        success: function(response) {
-          alert('הקבוצה עודכנה בהצלחה!');
-          loadGroupsWithJQuery();
-        }
-      });
-    }
-  };
-
-  const handleDeleteGroup = (groupId) => {
-    // פונקציה למחיקת קבוצה - דרישה 19 Delete
-    if (window.confirm('האם אתה בטוח שברצונך למחוק את הקבוצה?')) 
-      {      $.ajax({
-        url: `/api/groups/${groupId}`,
-        method: 'DELETE',
-        success: function(response) {
-          alert('הקבוצה נמחקה בהצלחה!');
-          loadGroupsWithJQuery();
-        }
-      });
-    }
   };
 
   if (isLoading) {
@@ -280,7 +233,6 @@ function GroupSearchPage() {
   return (
     <div className="page-container" dir="rtl">
       
-      {/* רקע עם אלמנטים צפים */}
       <div className="page-background">
         <div className="floating-element floating-element-1"></div>
         <div className="floating-element floating-element-2"></div>
@@ -289,7 +241,6 @@ function GroupSearchPage() {
 
       <div className="container position-relative">
         
-        {/* כותרת מפוארת עם Canvas */}
         <div className="page-header">
           <div className="page-icon">
             <span>👥</span>
@@ -301,20 +252,6 @@ function GroupSearchPage() {
             מצא את הקהילה המושלמת עבורך מבין אלפי קבוצות פעילות ומעניינות
           </p>
           
-          {/* HTML5 Video - דרישה 26.i */}
-          <div className="mt-3">
-            <video 
-              ref={videoRef}
-              width="300" 
-              height="200" 
-              controls
-              style={{ borderRadius: '10px', display: 'none' }}>
-              <source src="intro-video.mp4" type="video/mp4" />
-              הדפדפן שלך לא תומך בוידאו HTML5
-            </video>
-          </div>
-          
-          {/* סטטיסטיקות */}
           <div className="stats-container">
             <div className="stat-item">
               <span className="stat-number">10+</span>
@@ -331,7 +268,6 @@ function GroupSearchPage() {
           </div>
         </div>
 
-        {/* תיבת חיפוש */}
         <div className="row justify-content-center mb-5">
           <div className="col-lg-10">
             <SearchBox
@@ -341,7 +277,6 @@ function GroupSearchPage() {
               icon="🔍"
             />
             
-            {/* כפתור חיפוש מתקדם */}
             <div className="text-center mt-3">
               <Button
                 variant="outline"
@@ -353,7 +288,6 @@ function GroupSearchPage() {
           </div>
         </div>
 
-        {/* חיפוש מתקדם - דרישה 20 */}
         {showAdvancedSearch && (
           <div className="row justify-content-center mb-4">
             <div className="col-lg-10">
@@ -433,7 +367,6 @@ function GroupSearchPage() {
           </div>
         )}
 
-        {/* כפתורי קטגוריות */}
         <div className="filter-container">
           {categories.map((category) => (
             <button
@@ -445,10 +378,8 @@ function GroupSearchPage() {
           ))}
         </div>
 
-        {/* תוצאות */}
         {filteredGroups.length > 0 ? (
           <>
-            {/* פאנל מיון ותוצאות */}
             <div className="d-flex justify-content-between align-items-center mb-5 flex-wrap">
               <p className="loading-text mb-0">
                 נמצאו <span className="fw-bold">{filteredGroups.length}</span> קבוצות מדהימות
@@ -464,7 +395,6 @@ function GroupSearchPage() {
               </select>
             </div>
             
-            {/* רשימת קבוצות עם Multiple Columns - דרישה 27.iii */}
             <div className="groups-columns-container">
               {filteredGroups.map((group, index) => (
                 <Card 
@@ -472,14 +402,12 @@ function GroupSearchPage() {
                   variant="group" 
                   className="group-card mb-3">
                   
-                  {/* תווית HOT */}
                   {group.isHot && (
                     <div className="hot-badge">
                       🔥 HOT
                     </div>
                   )}
                   
-                  {/* אייקון הקבוצה */}
                   <div className="group-icon-container">
                     <div className="group-icon">
                       {group.icon}
@@ -492,7 +420,6 @@ function GroupSearchPage() {
                     {group.description}
                   </p>
                   
-                  {/* סטטיסטיקות */}
                   <div className="group-stats">
                     <div className="group-stat">
                       <div className="fw-bold">{group.memberCount.toLocaleString()}</div>
@@ -504,7 +431,7 @@ function GroupSearchPage() {
                     </div>
                   </div>
                   
-                  {/* כפתורי פעולה - CRUD Operations */}
+                  {/* רק כפתור הצטרפות - הסרנו עריכה ומחיקה */}
                   <div className="d-flex gap-2 mb-2">
                     <Button
                       variant="secondary"
@@ -522,26 +449,8 @@ function GroupSearchPage() {
                         </>
                       )}
                     </Button>
-                    
-                    {/* כפתורי עריכה ומחיקה - דרישה 19 */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleUpdateGroup(group.id)}
-                      title="ערוך קבוצה">
-                      ✏️
-                    </Button>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteGroup(group.id)}
-                      title="מחק קבוצה">
-                      🗑️
-                    </Button>
                   </div>
                   
-                  {/* פוסטים אחרונים */}
                   <div className="group-recent-posts">
                     <div className="recent-posts-title">פוסטים אחרונים:</div>
                     <div>• {group.recentPosts && group.recentPosts.length > 0 ? group.recentPosts[0] : 'אין פוסטים אחרונים'}</div>

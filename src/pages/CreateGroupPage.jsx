@@ -17,14 +17,13 @@ function CreateGroupPage() {
     allowComments: true,
     allowPosts: true,
     setupRolesLater: true,
-    assignedRoles: []  // הוספת שדה חדש
+    assignedRoles: []
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [groupImage, setGroupImage] = useState(null);
   
-  // HTML5 refs
-  const videoRef = useRef(null);
+  // HTML5 refs - הסרנו videoRef
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -44,12 +43,10 @@ function CreateGroupPage() {
   ];
 
   useEffect(() => {
-    // jQuery animations on load
     $(document).ready(function() {
       $('.page-header').hide().fadeIn(1000);
       $('.create-group-form').hide().slideDown(800);
       
-      // jQuery hover effects
       $('.form-input, .form-select, textarea').hover(
         function() {
           $(this).addClass('input-hover');
@@ -60,13 +57,11 @@ function CreateGroupPage() {
       );
     });
 
-    // Draw initial canvas
     if (canvasRef.current) {
       drawGroupIcon();
     }
   }, []);
 
-  // HTML5 Canvas - ציור אייקון קבוצה - דרישה 26.ii
   const drawGroupIcon = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -75,20 +70,17 @@ function CreateGroupPage() {
     canvas.width = 150;
     canvas.height = 150;
     
-    // רקע מעגלי
     ctx.fillStyle = '#667eea';
     ctx.beginPath();
     ctx.arc(75, 75, 70, 0, Math.PI * 2);
     ctx.fill();
     
-    // אייקון קבוצה
     ctx.fillStyle = 'white';
     ctx.font = '60px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('👥', 75, 75);
     
-    // טקסט
     if (formData.name) {
       ctx.fillStyle = 'white';
       ctx.font = 'bold 14px Arial';
@@ -96,7 +88,6 @@ function CreateGroupPage() {
     }
   };
 
-  // עדכון Canvas כשהשם משתנה
   useEffect(() => {
     drawGroupIcon();
   }, [formData.name]);
@@ -107,7 +98,6 @@ function CreateGroupPage() {
       [field]: value
     }));
     
-    // jQuery לנקות שגיאות
     if (errors[field]) {
       $(`#${field}-error`).fadeOut(300, function() {
         setErrors(prev => {
@@ -144,7 +134,6 @@ function CreateGroupPage() {
     
     setErrors(newErrors);
     
-    // jQuery להראות שגיאות עם אנימציה
     Object.keys(newErrors).forEach(field => {
       $(`#${field}-error`).hide().fadeIn(500);
     });
@@ -156,7 +145,6 @@ function CreateGroupPage() {
     e.preventDefault();
     
     if (!validateForm()) {
-      // jQuery לגלול לשגיאה הראשונה
       const firstError = Object.keys(errors)[0];
       $('html, body').animate({
         scrollTop: $(`[name="${firstError}"]`).offset().top - 100
@@ -166,7 +154,6 @@ function CreateGroupPage() {
     
     setIsSubmitting(true);
     
-    // jQuery Ajax לשליחת הטופס - דרישה 25
     $.ajax({
       url: '/api/groups',
       method: 'POST',
@@ -176,10 +163,8 @@ function CreateGroupPage() {
         $('.create-group-form').fadeTo(500, 0.5);
       },
       success: function(response) {
-        // אנימציית הצלחה
         $('.create-group-form').fadeTo(500, 1);
         
-        // הודעת הצלחה עם jQuery
         const successMessage = $('<div>')
           .addClass('alert alert-success')
           .html(`<h3>🎉 קבוצת "${formData.name}" נוצרה בהצלחה!</h3>`)
@@ -188,7 +173,6 @@ function CreateGroupPage() {
         $('.page-header').after(successMessage);
         successMessage.slideDown(500);
         
-        // איפוס הטופס
         setTimeout(() => {
           setFormData({
             name: '',
@@ -219,7 +203,6 @@ function CreateGroupPage() {
     });
   };
 
-  // העלאת תמונה ל-Canvas
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -233,12 +216,10 @@ function CreateGroupPage() {
           canvas.width = 150;
           canvas.height = 150;
           
-          // חיתוך מעגלי
           ctx.beginPath();
           ctx.arc(75, 75, 70, 0, Math.PI * 2);
           ctx.clip();
           
-          // ציור התמונה
           ctx.drawImage(img, 0, 0, 150, 150);
           
           setGroupImage(event.target.result);
@@ -252,7 +233,6 @@ function CreateGroupPage() {
   return (
     <div className="page-container" dir="rtl">
       
-      {/* רקע עם אלמנטים צפים */}
       <div className="page-background">
         <div className="floating-element floating-element-1"></div>
         <div className="floating-element floating-element-2"></div>
@@ -263,14 +243,13 @@ function CreateGroupPage() {
         <div className="row justify-content-center">
           <div className="col-lg-8 col-md-10">
             
-            {/* כותרת העמוד */}
+            {/* כותרת העמוד - ללא סרטון הדרכה */}
             <div className="page-header">
               <h1 className="page-title">יצירת קבוצה חדשה</h1>
               <p className="page-subtitle mb-4">
                 צור את הקבוצה המושלמת עבורך ועבור החברים שלך
               </p>
               
-              {/* קומפוננטת העלאת תמונה */}
               <ImageUploadCanvas 
                 canvasRef={canvasRef}
                 fileInputRef={fileInputRef}
@@ -278,43 +257,12 @@ function CreateGroupPage() {
                 uploadText="העלה תמונת קבוצה"
                 size={150}
               />
-              
-              {/* HTML5 Video הדרכה - דרישה 26.i */}
-              <div className="text-center mt-4">
-                <video 
-                  ref={videoRef}
-                  width="500" 
-                  height="300" 
-                  controls
-                  poster="create-group-poster.jpg"
-                  style={{ 
-                    borderRadius: '15px',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                    maxWidth: '100%'
-                  }}>
-                  <source src="create-group-tutorial.mp4" type="video/mp4" />
-                  <source src="create-group-tutorial.webm" type="video/webm" />
-                  <track 
-                    kind="subtitles" 
-                    src="subtitles-he.vtt" 
-                    srclang="he" 
-                    label="עברית" 
-                    default 
-                  />
-                  הדפדפן שלך לא תומך בוידאו
-                </video>
-                <p className="text-white mt-2">
-                  <small>צפה בסרטון הדרכה ליצירת קבוצה</small>
-                </p>
-              </div>
             </div>
 
-            {/* טופס יצירת קבוצה מורחב */}
             <Card variant="solid">
               
               <form onSubmit={handleSubmit} className="create-group-form">
                 
-                {/* שם הקבוצה */}
                 <Input
                   name="name"
                   label="שם הקבוצה"
@@ -329,7 +277,6 @@ function CreateGroupPage() {
                 />
                 <div id="name-error" className="text-danger" style={{ display: 'none' }}></div>
                 
-                {/* תיאור הקבוצה */}
                 <div className="form-group">
                   <label className="form-label">תיאור הקבוצה</label>
                   <textarea
@@ -351,7 +298,6 @@ function CreateGroupPage() {
                   </small>
                 </div>
 
-                {/* חוקי הקבוצה - שדה נוסף */}
                 <div className="form-group">
                   <label className="form-label">חוקי הקבוצה</label>
                   <textarea
@@ -372,7 +318,6 @@ function CreateGroupPage() {
 
                 <div className="row">
                   <div className="col-md-6">
-                    {/* רמת פרטיות */}
                     <div className="form-group">
                       <label className="form-label">רמת פרטיות</label>
                       <select
@@ -395,7 +340,6 @@ function CreateGroupPage() {
                   </div>
                   
                   <div className="col-md-6">
-                    {/* תחום עניין */}
                     <div className="form-group">
                       <label className="form-label">תחום התעניינות</label>
                       <select
@@ -419,11 +363,9 @@ function CreateGroupPage() {
                   </div>
                 </div>
 
-                {/* הגדרות הרשאות - מתוקן */}
                 <div className="form-group mt-4">
                   <label className="form-label">הגדרות הרשאות</label>
                   
-                  {/* תיבות סימון בפריסת Grid כדי למנוע דריסה */}
                   <div className="mb-4">
                     <div className="row g-3">
                       <div className="col-md-4">
@@ -476,12 +418,10 @@ function CreateGroupPage() {
                     </div>
                   </div>
 
-                  {/* קומפוננטת ניהול תפקידים */}
                   <GroupRolesManager 
                     onRolesUpdate={(roles) => handleInputChange('assignedRoles', roles)}
                   />
 
-                  {/* הודעה על הרשאות ברירת מחדל */}
                   <div className="bg-light rounded p-3">
                     <h6 className="mb-2">הרשאות ברירת מחדל לחברי קבוצה:</h6>
                     <ul className="mb-0 small">
@@ -492,7 +432,6 @@ function CreateGroupPage() {
                   </div>
                 </div>
 
-                {/* כפתור יצירה */}
                 <div className="d-grid">
                   <Button 
                     type="submit" 
@@ -515,7 +454,6 @@ function CreateGroupPage() {
                 </div>
               </form>
               
-              {/* טיפ */}
               <div className="text-center mt-4">
                 <small className="text-muted">
                   💡 טיפ: קבוצות עם תיאור ברור ותחום עניין מעניין מקבלות יותר חברים
