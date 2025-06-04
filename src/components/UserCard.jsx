@@ -8,125 +8,119 @@ function UserCard({ user, onAddFriend, onSendMessage, onViewProfile }) {
   const handleAddFriend = () => {
     if (onAddFriend) {
       onAddFriend(user.id, user);
-    } else {
-      if (user.isFriend) {
-        alert(`הסרת את ${user.name} מרשימת החברים 💔`);
-      } else {
-        alert(`נשלחה בקשת חברות ל-${user.name} 👥`);
-      }
     }
   };
 
   const handleSendMessage = () => {
     if (onSendMessage) {
       onSendMessage(user.id, user);
-    } else {
-      alert(`פותח צ'אט עם ${user.name} 💬`);
     }
   };
 
   const handleViewProfile = () => {
     if (onViewProfile) {
       onViewProfile(user.id, user);
-    } else {
-      alert(`מציג פרופיל של ${user.name}`);
     }
   };
 
   return (
-    <Card variant="user" className="h-100">
-      <div className="user-card-content">
+    <Card variant="user" className="business-card">
+      {/* חלק עליון - פרופיל ופרטים אישיים */}
+      <div className="card-header-section">
+        <UserProfile 
+          user={user} 
+          size="lg"
+          showEmail={false}
+          showStatus={true}
+          className="mb-3"
+        />
         
-        {/* פרופיל משתמש */}
-        <div className="flex-grow-1">
-          <UserProfile 
-            user={user} 
-            size="lg" 
-            showEmail={true}
-            showStatus={user.isOnline}
-          />
-          
-          {/* פרטים נוספים */}
-          <div className="mt-3">
-            {user.profession && (
-              <div className="text-primary fw-semibold mb-2">
-                💼 {user.profession}
-              </div>
-            )}
-            
-            {user.location && (
-              <div className="text-secondary mb-2">
-                📍 {user.location}
-              </div>
-            )}
-            
-            {user.bio && (
-              <div className="text-secondary mb-2">
-                {user.bio}
-              </div>
-            )}
-            
-            {user.mutualFriends > 0 && (
-              <div className="text-muted">
-                👥 {user.mutualFriends} חברים משותפים
-              </div>
-            )}
-          </div>
-        </div>
+        {/* כינוי */}
+        {user.nickname && (
+          <p className="user-nickname">"{user.nickname}"</p>
+        )}
         
-        {/* סטטוס חיבור */}
-        <div className="text-right mb-3">
-          <span className={`badge ${user.isOnline ? 'bg-success' : 'bg-secondary'} text-white`}>
-            {user.isOnline ? '🟢 מחובר' : '⚫ לא מחובר'}
-          </span>
-        </div>
+        {/* מקצוע */}
+        {user.profession && (
+          <p className="user-profession-badge">
+            <span className="icon">💼</span>
+            {user.profession}
+          </p>
+        )}
       </div>
-      
+
+      {/* קו מפריד דקורטיבי */}
+      <div className="divider-decorative">
+        <span className="divider-icon">✦</span>
+      </div>
+
+      {/* תיאור אישי */}
+      {user.bio && (
+        <div className="bio-section">
+          <p className="bio-text">{user.bio}</p>
+        </div>
+      )}
+
+      {/* פרטי קשר ומיקום */}
+      <div className="contact-info">
+        {user.email && (
+          <div className="info-item">
+            <span className="info-icon">✉️</span>
+            <span className="info-text">{user.email}</span>
+          </div>
+        )}
+        
+        {user.location && (
+          <div className="info-item">
+            <span className="info-icon">📍</span>
+            <span className="info-text">{user.location}</span>
+          </div>
+        )}
+        
+        {user.mutualFriends > 0 && (
+          <div className="info-item">
+            <span className="info-icon">👥</span>
+            <span className="info-text">{user.mutualFriends} חברים משותפים</span>
+          </div>
+        )}
+      </div>
+
       {/* תחומי עניין */}
       {user.interests && user.interests.length > 0 && (
-        <div className="mt-3">
-          <div className="d-flex gap-1 flex-wrap">
-            {user.interests.slice(0, 3).map((interest, index) => (
-              <span 
-                key={index}
-                className="badge bg-light text-primary">
+        <div className="interests-section">
+          <h6 className="section-label">תחומי התמחות</h6>
+          <div className="interests-tags">
+            {user.interests.map((interest, index) => (
+              <span key={index} className="interest-chip">
                 {interest}
               </span>
             ))}
-            {user.interests.length > 3 && (
-              <span className="badge bg-light text-muted">
-                +{user.interests.length - 3}
-              </span>
-            )}
           </div>
         </div>
       )}
-      
+
       {/* כפתורי פעולה */}
-      <div className="d-flex gap-2 mt-3">
+      <div className="card-actions">
         <Button 
           variant={user.isFriend ? "secondary" : "primary"} 
           size="sm"
           onClick={handleAddFriend}
           className="flex-grow-1">
-          <span>{user.isFriend ? '👥' : '➕'}</span>
-          {user.isFriend ? 'חבר' : 'הוסף חבר'}
+          {user.isFriend ? '✓ חברים' : '+ הוסף חבר'}
         </Button>
         
         <Button 
           variant="outline" 
           size="sm"
           onClick={handleSendMessage}>
-          <span>💬</span>
-          הודעה
+          💬
         </Button>
         
         <Button 
           variant="outline" 
           size="sm"
           onClick={handleViewProfile}>
-          <span>👤</span>
-          פרופיל
+          👤
         </Button>
       </div>
     </Card>

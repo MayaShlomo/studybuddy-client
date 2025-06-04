@@ -90,6 +90,23 @@
   --border-subtle: 1px solid #e2e8f0;
 }
 
+/* ==================== Font Face - דרישה 27.iv ==================== */
+@font-face {
+  font-family: 'CustomHebrewFont';
+  src: url('https://fonts.gstatic.com/s/rubik/v28/iJWKBXyIfDnIV7nBrXw.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CustomHebrewFont';
+  src: url('https://fonts.gstatic.com/s/rubik/v28/iJWKBXyIfDnIV7nFrXyw023e.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ==================== Global Reset ==================== */
 * {
   margin: 0;
@@ -103,7 +120,7 @@ html {
 }
 
 body {
-  font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'CustomHebrewFont', 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text-primary);
@@ -135,6 +152,9 @@ body {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
+  transition: 
+    transform 6s ease-in-out infinite,
+    opacity 2s ease;
 }
 
 .floating-element-1 {
@@ -171,7 +191,11 @@ body {
   border: var(--border-glass);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
-  transition: var(--transition-slow);
+  transition: 
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease;
   position: relative;
   overflow: hidden;
   padding: 1rem;
@@ -187,6 +211,11 @@ body {
   backdrop-filter: var(--backdrop-blur-sm);
   border: var(--border-subtle);
   padding: 2.5rem !important;
+  transition: 
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* ==================== Header Components ==================== */
@@ -211,13 +240,23 @@ body {
   box-shadow: var(--shadow-lg);
   margin-bottom: var(--space-lg);
   font-size: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-icon.mx-auto {
+  display: inline-flex !important;
 }
 
 .page-title {
   font-size: 3rem;
   font-weight: 800;
   color: white;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(102, 126, 234, 0.5),
+    0 0 20px rgba(102, 126, 234, 0.3),
+    4px 4px 8px rgba(0, 0, 0, 0.2);
   margin-bottom: var(--space-md);
 }
 
@@ -225,7 +264,9 @@ body {
   font-size: 1.3rem;
   color: white;
   opacity: 0.95;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  text-shadow: 
+    1px 1px 3px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(255, 255, 255, 0.2);
   max-width: 600px;
   margin: 0 auto var(--space-lg);
 }
@@ -246,6 +287,16 @@ body {
   padding: var(--space-lg) var(--space-xl);
   text-align: center;
   color: white;
+  transition: 
+    transform 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px) scale(1.05);
+  background-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stat-number {
@@ -285,12 +336,20 @@ body {
   font-size: 1.1rem;
   text-align: right;
   outline: none;
-  transition: var(--transition-base);
+  transition: 
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .search-input:focus {
   transform: scale(1.02);
   box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
 }
 
 .search-icon {
@@ -322,7 +381,9 @@ body {
   padding: 12px 25px;
   font-weight: 600;
   backdrop-filter: var(--backdrop-blur-sm);
-  transition: var(--transition-slow);
+  transition: 
+    all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 0.2s ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -332,6 +393,9 @@ body {
 .filter-button:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
+  transition: 
+    all 0.2s ease,
+    transform 0.1s ease;
 }
 
 .filter-button.active {
@@ -355,7 +419,9 @@ body {
   font-weight: 500;
   font-size: 0.875rem;
   backdrop-filter: var(--backdrop-blur-sm);
-  transition: var(--transition-slow);
+  transition: 
+    all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 0.2s ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -367,6 +433,9 @@ body {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   background: rgba(255, 255, 255, 0.15);
+  transition: 
+    all 0.2s ease,
+    transform 0.1s ease;
 }
 
 .filter-button-compact.active {
@@ -407,6 +476,128 @@ body {
   }
 }
 
+/* ==================== Multiple Columns - דרישה 27.iii ==================== */
+.groups-columns-container {
+  column-count: 3;
+  column-gap: 1.5rem;
+  column-rule: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: var(--space-2xl);
+}
+
+.groups-columns-container .group-card {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 1200px) {
+  .groups-columns-container {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .groups-columns-container {
+    column-count: 1;
+  }
+}
+
+.users-columns-container {
+  column-count: 2;
+  column-gap: 2rem;
+  column-rule: 2px dotted var(--primary);
+  padding: 1rem;
+}
+
+@media (max-width: 992px) {
+  .users-columns-container {
+    column-count: 1;
+  }
+}
+
+/* עמודות מתקדמות לתוצאות חיפוש */
+.search-results-columns {
+  column-count: 4;
+  column-gap: 2rem;
+  column-rule: 2px solid rgba(102, 126, 234, 0.3);
+  column-fill: balance;
+  orphans: 2;
+  widows: 2;
+}
+
+@media (max-width: 1400px) {
+  .search-results-columns {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 1200px) {
+  .search-results-columns {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-results-columns {
+    column-count: 1;
+  }
+}
+
+/* עמודות לרשימת תחומי עניין */
+.interests-columns {
+  column-count: 3;
+  column-gap: 1.5rem;
+  column-rule: 1px dotted var(--primary);
+  column-span: all;
+}
+
+.interests-columns .interest-item {
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: inline-block;
+  width: 100%;
+}
+
+/* עמודות למאמרים או תוכן ארוך */
+.article-columns {
+  column-count: 2;
+  column-gap: 3rem;
+  column-rule: 3px double var(--primary);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.article-columns h3 {
+  column-span: all;
+  text-align: center;
+  margin: 2rem 0;
+  color: var(--primary);
+}
+
+/* עמודות לתגובות */
+.comments-columns {
+  column-count: 2;
+  column-gap: 1.5rem;
+  column-rule: 1px solid #e2e8f0;
+}
+
+.comments-columns .comment {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  width: 100%;
+}
+
 /* ==================== Group Card Component ==================== */
 .group-card {
   background: var(--gradient-primary);
@@ -416,7 +607,11 @@ body {
   box-shadow: var(--shadow-card);
   backdrop-filter: var(--backdrop-blur-sm);
   border: var(--border-glass);
-  transition: var(--transition-bounce);
+  transition: 
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -479,6 +674,9 @@ body {
   font-weight: 700;
   text-align: center;
   margin-bottom: var(--space-md);
+  text-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.2),
+    0 0 5px rgba(255, 255, 255, 0.1);
 }
 
 .group-description {
@@ -515,64 +713,347 @@ body {
   margin-bottom: var(--space-xs);
 }
 
-/* ==================== User Card Component ==================== */
+/* ==================== User Card Component - כרטיס ביקור ==================== */
 .user-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: var(--backdrop-blur-sm);
-  border: var(--border-subtle);
-  border-radius: var(--radius-card);
-  padding: 2rem !important;
-  box-shadow: var(--shadow-card);
-  transition: var(--transition-slow);
+  background: white !important;
+  border: 1px solid #e5e5e5 !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  transition: 
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .user-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+  border-color: #d0d0d0 !important;
 }
 
-.user-card-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+/* כרטיס ביקור מקצועי */
+.business-card {
+  width: 100%;
+  max-width: 320px;
+  background: white !important;
+  position: relative;
 }
 
-.user-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.business-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
+/* חלק עליון - פרופיל */
+.card-header-section {
+  padding: 25px 25px 20px;
+  text-align: center;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.user-details {
-  text-align: right;
+.card-header-section .user-profile {
+  margin-bottom: 12px;
 }
 
-.user-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.25rem;
+.card-header-section .avatar {
+  width: 70px !important;
+  height: 70px !important;
+  font-size: 1.8rem !important;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%) !important;
+  border: 3px solid white !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
-.user-profession {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  font-weight: 500;
+.card-header-section .avatar.online::after {
+  width: 14px;
+  height: 14px;
+  bottom: 2px;
+  right: 2px;
+  border-width: 2px;
 }
 
-.user-email {
+.card-header-section .user-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+  text-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.2),
+    0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.card-header-section .user-email {
+  display: none;
+}
+
+/* כינוי */
+.user-nickname {
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: #777;
+  font-style: italic;
+  margin: 0 0 8px 0;
+}
+
+/* תג מקצוע */
+.user-profession-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 500;
+  margin: 0;
+}
+
+.user-profession-badge .icon {
+  font-size: 0.9rem;
+}
+
+/* קו מפריד דקורטיבי */
+.divider-decorative {
+  text-align: center;
+  margin: 0;
+  padding: 15px 0;
+  position: relative;
+}
+
+.divider-decorative::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 25px;
+  right: 25px;
+  height: 1px;
+  background: #e8e8e8;
+}
+
+.divider-icon {
+  background: white;
+  padding: 0 10px;
+  position: relative;
+  color: #ccc;
+  font-size: 0.7rem;
+}
+
+/* תיאור אישי */
+.bio-section {
+  padding: 0 25px 15px;
+}
+
+.bio-text {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+/* פרטי קשר */
+.contact-info {
+  padding: 0 25px 15px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.info-icon {
+  font-size: 0.9rem;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.info-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* תחומי עניין */
+.interests-section {
+  padding: 0 25px 15px;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #999;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.interests-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.interest-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  background: #f5f5f5;
+  color: #666;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #ececec;
+  transition: 
+    all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s ease;
+}
+
+.interest-chip:hover {
+  background: #0ea5e9;
+  color: white;
+  border-color: #0ea5e9;
+  transform: translateY(-1px);
+}
+
+/* כפתורי פעולה */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  padding: 15px 20px;
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  margin-top: auto;
+}
+
+.card-actions .btn {
+  border-radius: 6px !important;
+  font-size: 0.9rem !important;
+  padding: 8px 16px !important;
+}
+
+.card-actions .btn-primary {
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.card-actions .btn-primary:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.card-actions .btn-secondary {
+  background: white !important;
+  border: 1px solid #ddd !important;
+  color: #666 !important;
+}
+
+.card-actions .btn-outline {
+  width: 42px;
+  height: 42px;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white !important;
+  border: 1px solid #ddd !important;
+  color: #666 !important;
+  font-size: 1.3rem !important;
+}
+
+.card-actions .btn-outline:hover {
+  background: #f5f5f5 !important;
+  border-color: #bbb !important;
+}
+
+/* תצוגת Grid לכרטיסי ביקור */
+.users-grid-business {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+  .users-grid-business {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .users-grid-business {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+/* עיצוב מינימליסטי לפרופיל המשתמש */
+.business-card .user-profile {
+  position: relative;
+}
+
+.business-card .user-info {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.business-card .user-details {
+  width: 100%;
+}
+
+/* התאמות למובייל */
+@media (max-width: 768px) {
+  .users-grid-business {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .business-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .business-card {
+    width: 100%;
+  }
+  
+  .card-header-section,
+  .bio-section,
+  .contact-info,
+  .interests-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .card-actions {
+    padding: 12px 15px;
+  }
+  
+  .info-text {
+    font-size: 0.75rem;
+  }
 }
 
 /* ==================== Avatar Component ==================== */
@@ -586,14 +1067,27 @@ body {
   font-size: 1.5rem;
   font-weight: 700;
   color: white;
+  background: var(--gradient-primary) !important;
   box-shadow: var(--shadow-md);
-  transition: var(--transition-base);
+  transition: 
+    transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   position: relative;
 }
 
 .avatar:hover {
   transform: scale(1.1);
   box-shadow: var(--shadow-lg);
+  transition: 
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.avatar.avatar-lg {
+  width: 80px;
+  height: 80px;
+  font-size: 2rem;
 }
 
 .avatar.online::after {
@@ -616,7 +1110,10 @@ body {
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition-base);
+  transition: 
+    all 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -626,6 +1123,29 @@ body {
   text-decoration: none;
   outline: none;
   white-space: nowrap;
+  font-family: inherit !important;
+  line-height: 1.5 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn:hover {
@@ -672,7 +1192,8 @@ body {
 
 /* כפתורי רשתות חברתיות בכרטיס לבן */
 .glass-card-solid .btn-outline,
-.user-card .btn-outline {
+.user-card .btn-outline,
+.user-card-wrapper .btn-outline {
   background: var(--bg-tertiary) !important;
   color: var(--text-primary) !important;
   border: 2px solid var(--primary) !important;
@@ -680,10 +1201,30 @@ body {
 }
 
 .glass-card-solid .btn-outline:hover,
-.user-card .btn-outline:hover {
+.user-card .btn-outline:hover,
+.user-card-wrapper .btn-outline:hover {
   background: var(--primary) !important;
   color: white !important;
   border-color: var(--primary) !important;
+}
+
+/* Override Bootstrap button styles for user cards */
+.user-card-wrapper .btn {
+  border-radius: var(--radius-button) !important;
+  font-family: inherit !important;
+  transition: var(--transition-base) !important;
+}
+
+.user-card-wrapper .btn-primary {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.user-card-wrapper .btn-secondary {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border: none !important;
 }
 
 .btn-sm {
@@ -739,7 +1280,11 @@ body {
   border: 2px solid #e2e8f0;
   border-radius: var(--radius-button);
   font-size: 1rem;
-  transition: var(--transition-base);
+  transition: 
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease;
   background: var(--bg-secondary);
   text-align: right;
   outline: none;
@@ -754,6 +1299,10 @@ body {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   transform: translateY(-1px);
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
 }
 
 .form-input.with-icon {
@@ -792,6 +1341,11 @@ body {
   width: 100% !important;
   max-width: 100% !important;
   min-width: auto !important;
+  transition: 
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .filter-sort-select {
@@ -818,6 +1372,13 @@ body {
 .form-check-label {
   cursor: pointer;
   user-select: none;
+}
+
+/* ==================== jQuery Hover Effects ==================== */
+.input-hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+  border-color: var(--primary) !important;
 }
 
 /* ==================== Loading States ==================== */
@@ -859,7 +1420,9 @@ body {
 .loading-text {
   color: white;
   font-size: 1.2rem;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  text-shadow: 
+    1px 1px 3px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(255, 255, 255, 0.4);
   margin-bottom: var(--space-sm);
 }
 
@@ -867,6 +1430,56 @@ body {
   color: white;
   opacity: 0.8;
   text-align: center;
+}
+
+/* אנימציה לטעינה */
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    color: rgba(0,0,0,0);
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  40% {
+    color: white;
+    text-shadow:
+      .25em 0 0 rgba(0,0,0,0),
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  60% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 rgba(0,0,0,0);
+  }
+  80%, 100% {
+    text-shadow:
+      .25em 0 0 white,
+      .5em 0 0 white;
+  }
+}
+
+/* אנימציה לטעינת תוצאות */
+.loading-skeleton {
+  background: linear-gradient(90deg, 
+    #f0f0f0 25%, 
+    #e0e0e0 50%, 
+    #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ==================== Empty State ==================== */
@@ -894,7 +1507,9 @@ body {
   color: white;
   font-size: 2rem;
   font-weight: 700;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(255, 255, 255, 0.3);
   margin-bottom: var(--space-lg);
 }
 
@@ -908,14 +1523,27 @@ body {
 
 /* ==================== Alert Component ==================== */
 .alert {
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: var(--radius-lg);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .alert-danger {
   background: var(--danger);
   color: white;
+}
+
+.alert h3 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 /* ==================== Progress Bar ==================== */
@@ -938,6 +1566,284 @@ body {
   font-weight: 500;
   border-radius: var(--radius-full);
   white-space: nowrap;
+}
+
+/* ==================== Image Upload Container ==================== */
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* הוספת עיצוב מיוחד לכפתור העלאת תמונה על רקע סגול */
+.page-header .btn-secondary {
+  background: white !important;
+  color: var(--primary) !important;
+  border: 2px solid white !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.page-header .btn-secondary:hover {
+  background: rgba(255,255,255,0.9) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+/* ==================== Interests Components ==================== */
+/* רשת תחומי עניין בדף הרשמה */
+.interests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+@media (min-width: 768px) {
+  .interests-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+}
+
+/* בורר תחומי עניין */
+.interests-selector {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 10px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* תחומי עניין שנבחרו - תצוגה קבועה */
+.selected-interests-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selected-interest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  animation: badgeAppear 0.3s ease;
+}
+
+@keyframes badgeAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.remove-interest-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  margin-right: -4px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.remove-interest-btn:hover {
+  opacity: 1;
+}
+
+/* עיצוב תגי העניין */
+.interest-tag {
+  transition: 
+    all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.2s ease;
+  border-width: 2px !important;
+}
+
+.interest-tag:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.interest-tag:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.interest-tag.btn-primary {
+  background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%) !important;
+  border-color: #3b82f6 !important;
+}
+
+.interest-tag.btn-outline-secondary {
+  background: white !important;
+  color: #666 !important;
+  border-color: #e5e5e5 !important;
+}
+
+.interest-tag.btn-outline-secondary:hover:not(:disabled) {
+  background: #f8f9fa !important;
+  border-color: #0ea5e9 !important;
+  color: #0ea5e9 !important;
+}
+
+/* ==================== Advanced Visual Effects ==================== */
+
+/* זכוכית מטושטשת מתקדמת */
+.ultra-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* נאון גלו */
+.neon-glow {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px var(--primary),
+    0 0 35px var(--primary),
+    0 0 40px var(--primary);
+}
+
+/* דופק אור */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+  }
+}
+
+.pulse-element {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* הדגשת תוצאות חיפוש */
+.search-highlight {
+  background: linear-gradient(120deg, 
+    rgba(255, 255, 0, 0.3) 0%, 
+    rgba(255, 255, 0, 0.1) 100%);
+  padding: 0.1em 0.2em;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.search-highlight:hover {
+  background: linear-gradient(120deg, 
+    rgba(255, 255, 0, 0.5) 0%, 
+    rgba(255, 255, 0, 0.2) 100%);
+}
+
+/* ==================== Compact User Cards ==================== */
+/* גודל כרטיס משתמש קומפקטי יותר */
+.user-card-compact {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: var(--backdrop-blur-sm) !important;
+  border: var(--border-subtle) !important;
+  border-radius: var(--radius-card) !important;
+  padding: 1.25rem !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: var(--transition-slow);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.user-card-compact .avatar {
+  width: 50px !important;
+  height: 50px !important;
+  font-size: 1.25rem !important;
+}
+
+.user-card-compact .avatar.avatar-md {
+  width: 60px !important;
+  height: 60px !important;
+  font-size: 1.5rem !important;
+}
+
+.user-card-compact .user-name {
+  font-size: 1.1rem !important;
+}
+
+.user-card-compact .user-email {
+  font-size: 0.85rem !important;
+}
+
+.user-card-compact .user-detail-item {
+  font-size: 0.9rem !important;
+  margin-bottom: 0.4rem !important;
+}
+
+.user-card-compact .status-badge {
+  font-size: 0.8rem !important;
+  padding: 0.25rem 0.6rem !important;
+}
+
+.user-card-compact .interest-tag {
+  font-size: 0.8rem !important;
+  padding: 0.2rem 0.6rem !important;
+}
+
+/* תיקון כפתורים */
+.user-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.action-btn {
+  flex: 1;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.3rem !important;
+  padding: 0.5rem 0.75rem !important;
+  min-width: 85px !important;
+  white-space: nowrap !important;
+}
+
+.btn-icon {
+  font-size: 0.85rem !important;
+  flex-shrink: 0;
+}
+
+.btn-text {
+  font-size: 0.8rem !important;
+  line-height: 1 !important;
 }
 
 /* ==================== Animations ==================== */
@@ -1077,11 +1983,24 @@ hr {
 .col-lg-6 { flex: 0 0 50%; max-width: 50%; padding: 0 0.5rem; }
 .col-lg-8 { flex: 0 0 66.667%; max-width: 66.667%; padding: 0 0.5rem; }
 .col-lg-10 { flex: 0 0 83.333%; max-width: 83.333%; padding: 0 0.5rem; }
+.col-lg-12 { flex: 0 0 100%; max-width: 100%; padding: 0 0.5rem; }
 
 @media (min-width: 768px) {
   .col-md-6 { 
     flex: 0 0 50%; 
     max-width: 50%; 
+  }
+  .col-md-8 {
+    flex: 0 0 66.667%;
+    max-width: 66.667%;
+  }
+  .col-md-10 {
+    flex: 0 0 83.333%;
+    max-width: 83.333%;
+  }
+  .col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 }
 
@@ -1093,6 +2012,14 @@ hr {
   padding: 0.5rem;
 }
 
+.g-3 {
+  margin: -1rem;
+}
+
+.g-3 > * {
+  padding: 1rem;
+}
+
 /* ==================== Form Group Specific ==================== */
 .create-group-form .row {
   margin-left: -0.5rem;
@@ -1102,6 +2029,33 @@ hr {
 .create-group-form .col-md-6 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+/* ==================== Bootstrap Overrides ==================== */
+.card {
+  margin-bottom: 0 !important;
+}
+
+/* תיקון כפתורים שנדרסים */
+.action-btn {
+  min-width: 90px !important;
+  white-space: nowrap !important;
+}
+
+.btn-icon + .btn-text {
+  margin-right: 0.3rem !important;
+}
+
+/* וידוא שהטקסט בכפתורים לא נחתך */
+.user-actions .btn {
+  padding: 0.6rem 1rem !important;
+}
+
+/* וידוא שאייקון הכוכב ממורכז */
+.page-icon.mx-auto {
+  display: flex !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* ==================== RTL Support ==================== */
@@ -1135,6 +2089,32 @@ hr {
 [dir="rtl"] .ms-2 { margin-left: 0; margin-right: 0.5rem; }
 [dir="rtl"] .me-1 { margin-right: 0; margin-left: 0.25rem; }
 [dir="rtl"] .me-2 { margin-right: 0; margin-left: 0.5rem; }
+
+/* ==================== Advanced Grid Layouts ==================== */
+/* גריד מתקדם לכרטיסי משתמשים */
+.users-masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-auto-rows: masonry; /* תמיכה עתידית */
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* גריד עם גבהים שונים */
+.dynamic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-auto-flow: dense;
+  gap: 1.5rem;
+}
+
+.dynamic-grid .tall-card {
+  grid-row: span 2;
+}
+
+.dynamic-grid .wide-card {
+  grid-column: span 2;
+}
 
 /* ==================== Responsive Design ==================== */
 @media (max-width: 768px) {
@@ -1177,6 +2157,24 @@ hr {
     width: 100% !important;
     margin-top: 1rem;
   }
+  
+  /* קומפקטיות נוספת למובייל */
+  .user-card-compact {
+    padding: 1rem !important;
+  }
+  
+  .action-btn {
+    min-width: auto !important;
+    padding: 0.4rem 0.6rem !important;
+  }
+  
+  .btn-text {
+    display: none;
+  }
+  
+  .btn-icon {
+    font-size: 1rem !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1184,4 +2182,137 @@ hr {
   .search-wrapper { padding: 4px; }
   .stats-container { flex-direction: column; align-items: center; }
   .filter-container { justify-content: center; }
+}
+
+/* ==================== Responsive Container Queries ==================== */
+/* Container queries (תמיכה עתידית) */
+@container (min-width: 400px) {
+  .container-responsive {
+    padding: 2rem;
+  }
+}
+
+/* משתנים דינמיים למסך */
+@media (max-width: 1200px) {
+  :root {
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+    --space-3xl: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --space-lg: 1rem;
+    --space-xl: 1.25rem;
+    --space-2xl: 1.5rem;
+    --space-3xl: 2rem;
+  }
+}
+
+/* ==================== Browser Compatibility ==================== */
+/* וידוא שהגריד עובד בכל הדפדפנים */
+.grid-fallback {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.grid-fallback > * {
+  flex: 1 1 300px;
+  max-width: 100%;
+}
+
+@supports (display: grid) {
+  .grid-fallback {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  
+  .grid-fallback > * {
+    flex: none;
+  }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+  .page-background,
+  .floating-element,
+  .btn,
+  .search-wrapper {
+    display: none !important;
+  }
+  
+  .page-container {
+    background: white !important;
+  }
+  
+  .glass-card,
+  .glass-card-solid {
+    background: white !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+  
+  .page-title,
+  .page-subtitle {
+    color: black !important;
+    text-shadow: none !important;
+  }
+}
+
+/* ==================== High Contrast Mode ==================== */
+@media (prefers-contrast: high) {
+  :root {
+    --bg-glass: rgba(255, 255, 255, 0.9);
+    --border-glass: 2px solid rgba(0, 0, 0, 0.8);
+  }
+  
+  .glass-card,
+  .glass-card-solid {
+    border: 2px solid #000 !important;
+  }
+  
+  .btn-outline {
+    border: 3px solid white !important;
+  }
+}
+
+/* ==================== Reduced Motion ==================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .floating-element {
+    animation: none;
+  }
+  
+  .spinner-border {
+    animation: none;
+  }
+}
+
+/* ==================== Dark Mode Support (Optional) ==================== */
+@media (prefers-color-scheme: dark) {
+  .glass-card-solid {
+    background: rgba(30, 41, 59, 0.95) !important;
+    color: white;
+  }
+  
+  .form-input {
+    background: rgba(30, 41, 59, 0.8);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .user-card {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: white;
+  }
 }

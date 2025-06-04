@@ -11,21 +11,24 @@ function UserProfile({
   if (!user) return null;
 
   return (
-    <div className={`d-flex align-items-center gap-3 ${className}`}>
-      <Avatar 
-        name={user.name} 
-        size={size} 
-        showStatus={showStatus} 
-      />
-      
+    <div className={`user-profile ${className}`}>
       <div className="user-info">
-        <h4 className="user-name">{user.name}</h4>
-        {showEmail && (
-          <div className="user-email">
-            <span>✉️</span>
-            {user.email}
-          </div>
-        )}
+        <Avatar 
+          name={user.name} 
+          size={size} 
+          isOnline={showStatus && user.isOnline}
+          color={user.avatarColor}
+        />
+        
+        <div className="user-details">
+          <h4 className="user-name">{user.name}</h4>
+          {showEmail && (
+            <div className="user-email">
+              <span>✉️</span>
+              {user.email}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* global $, confirm */
+import React, { useState, useEffect, useRef } from 'react';
 import SearchBox from '../components/molecules/SearchBox';
 import UserCard from '../components/UserCard';
 import Button from '../components/atoms/Button';
@@ -11,164 +12,200 @@ function UserSearchPage() {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState('activity');
+  
+  // חיפוש מתקדם - דרישה 20
+  const [advancedSearch, setAdvancedSearch] = useState({
+    profession: '',
+    location: '',
+    hasInterests: '',
+    mutualFriendsMin: '',
+    joinedAfter: '',
+    onlineOnly: false
+  });
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
+  
+  // HTML5 Video ref
+  const videoRef = useRef(null);
 
-  // נתונים דמיוניים מורחבים
+  // נתונים דמיוניים מורחבים עם השדות החדשים - פורום כללי
   const dummyUsers = [
     { 
       id: 1, 
       name: 'מאיה שלמה', 
+      nickname: 'מאיושית',
       email: 'maya@example.com',
-      profession: 'Full Stack Developer',
+      profession: 'מורה ליוגה',
       location: 'תל אביב',
-      bio: 'מפתחת full stack עם ניסיון של 5 שנים ב-React ו-Node.js',
+      bio: 'אוהבת יוגה, מדיטציה וחיים בריאים. מאמינה שכל יום הוא הזדמנות חדשה להתפתח.',
       isFriend: false,
       isOnline: true,
       joinDate: '2023-01-15',
       lastActive: new Date().toISOString(),
       mutualFriends: 5,
-      interests: ['React', 'Node.js', 'UI/UX']
+      interests: ['יוגה', 'מדיטציה', 'בישול טבעוני', 'ספרות'],
+      avatarColor: '#667eea'
     },
     { 
       id: 2, 
-      name: 'ישראל פלד', 
-      email: 'israel@example.com',
-      profession: 'Product Manager',
-      location: 'הרצליה',
-      bio: 'מנהל מוצר בסטארט-אפ טכנולוגי',
+      name: 'יוסף לוי', 
+      nickname: 'יוסי השף',
+      email: 'yosef@example.com',
+      profession: 'שף ובעל מסעדה',
+      location: 'חיפה',
+      bio: 'שף עם תשוקה לאוכל ים תיכוני. אוהב לשתף מתכונים ולגלות טעמים חדשים.',
       isFriend: true,
       isOnline: false,
-      joinDate: '2022-08-20',
+      joinDate: '2022-11-20',
       lastActive: new Date(Date.now() - 3600000).toISOString(),
-      mutualFriends: 12,
-      interests: ['Product', 'StartUp', 'Analytics']
+      mutualFriends: 3,
+      interests: ['בישול', 'יין', 'נסיעות', 'צילום אוכל'],
+      avatarColor: '#f59e0b'
     },
     { 
       id: 3, 
-      name: 'נועה כהן', 
-      email: 'noa@example.com',
-      profession: 'UX Designer',
-      location: 'תל אביב',
-      bio: 'מעצבת חוויית משתמש',
+      name: 'דנה כהן', 
+      nickname: 'דנה הציירת',
+      email: 'dana@example.com',
+      profession: 'אמנית ומאיירת',
+      location: 'באר שבע',
+      bio: 'ציירת שאוהבת לתפוס את היופי בדברים הפשוטים. מלמדת אמנות לילדים.',
       isFriend: false,
       isOnline: true,
-      joinDate: '2023-03-10',
+      joinDate: '2023-06-01',
       lastActive: new Date().toISOString(),
-      mutualFriends: 3,
-      interests: ['UX Design', 'Figma']
+      mutualFriends: 8,
+      interests: ['ציור', 'פיסול', 'צילום', 'טיולים'],
+      avatarColor: '#ec4899'
     },
     { 
       id: 4, 
-      name: 'דני רוזן', 
-      email: 'danny@example.com',
-      profession: 'Android Developer',
-      location: 'חיפה',
-      bio: 'מפתח אפליקציות אנדרואיד',
-      isFriend: false,
+      name: 'אברהם ישראלי', 
+      nickname: 'אבי המטייל',
+      email: 'avraham@example.com',
+      profession: 'מדריך טיולים',
+      location: 'ירושלים',
+      bio: 'מדריך טיולים עם ניסיון של 15 שנה. אוהב לגלות מקומות חדשים ולשתף טיפים.',
+      isFriend: true,
       isOnline: true,
-      joinDate: '2023-06-05',
+      joinDate: '2022-03-10',
       lastActive: new Date().toISOString(),
-      mutualFriends: 2,
-      interests: ['Android', 'Kotlin']
+      mutualFriends: 12,
+      interests: ['טיולים', 'היסטוריה', 'צילום נוף', 'קמפינג'],
+      avatarColor: '#10b981'
     },
     { 
       id: 5, 
-      name: 'שירה לוי', 
-      email: 'shira@example.com',
-      profession: 'UI Designer',
-      location: 'רעננה',
-      bio: 'מעצבת ממשק משתמש',
-      isFriend: true,
-      isOnline: false,
-      joinDate: '2022-11-12',
-      lastActive: new Date(Date.now() - 7200000).toISOString(),
-      mutualFriends: 8,
-      interests: ['UI Design', 'Animation']
-    },
-    {
-      id: 6,
-      name: 'עמית גולן',
-      email: 'amit@example.com',
-      profession: 'Data Scientist',
-      location: 'ירושלים',
-      bio: 'מדען נתונים המתמחה בלמידת מכונה ובינה מלאכותית',
-      isFriend: false,
-      isOnline: true,
-      joinDate: '2023-02-28',
-      lastActive: new Date().toISOString(),
-      mutualFriends: 1,
-      interests: ['Machine Learning', 'Python', 'AI']
-    },
-    {
-      id: 7,
-      name: 'רונית אברהם',
-      email: 'ronit@example.com',
-      profession: 'Marketing Manager',
-      location: 'פתח תקווה',
-      bio: 'מנהלת שיווק דיגיטלי עם התמחות ברשתות חברתיות',
-      isFriend: false,
-      isOnline: false,
-      joinDate: '2023-07-18',
-      lastActive: new Date(Date.now() - 86400000).toISOString(),
-      mutualFriends: 0,
-      interests: ['Digital Marketing', 'Social Media']
-    },
-    {
-      id: 8,
-      name: 'יוסי כהן',
-      email: 'yossi@example.com',
-      profession: 'Backend Developer',
-      location: 'באר שבע',
-      bio: 'מפתח backend עם התמחות ב-Node.js ו-MongoDB',
-      isFriend: true,
-      isOnline: true,
-      joinDate: '2022-10-10',
-      lastActive: new Date().toISOString(),
-      mutualFriends: 7,
-      interests: ['Node.js', 'MongoDB', 'API Design']
-    },
-    {
-      id: 9,
-      name: 'טל ברק',
-      email: 'tal@example.com',
-      profession: 'Graphic Designer',
+      name: 'שרה מזרחי', 
+      nickname: 'שרה הגיימרית',
+      email: 'sarah@example.com',
+      profession: 'סטרימרית ויוצרת תוכן',
       location: 'נתניה',
-      bio: 'מעצבת גרפית עם ניסיון בעיצוב דיגיטלי ומיתוג',
-      isFriend: false,
-      isOnline: true,
-      joinDate: '2023-05-22',
-      lastActive: new Date().toISOString(),
-      mutualFriends: 4,
-      interests: ['Photoshop', 'Illustrator', 'Branding']
-    },
-    {
-      id: 10,
-      name: 'אורי שפירא',
-      email: 'ori@example.com',
-      profession: 'DevOps Engineer',
-      location: 'ראשון לציון',
-      bio: 'מהנדס DevOps עם התמחות ב-Docker ו-Kubernetes',
+      bio: 'גיימרית נלהבת ויוצרת תוכן. אוהבת לשתף טיפים ולבנות קהילה.',
       isFriend: false,
       isOnline: false,
-      joinDate: '2023-04-15',
-      lastActive: new Date(Date.now() - 10800000).toISOString(),
+      joinDate: '2023-09-15',
+      lastActive: new Date(Date.now() - 7200000).toISOString(),
+      mutualFriends: 2,
+      interests: ['גיימינג', 'סטרימינג', 'אנימה', 'טכנולוגיה'],
+      avatarColor: '#8b5cf6'
+    },
+    { 
+      id: 6, 
+      name: 'רון כהנא', 
+      nickname: 'רוני הכדורגלן',
+      email: 'ron@example.com',
+      profession: 'מאמן כושר אישי',
+      location: 'רעננה',
+      bio: 'מאמן כושר עם התמחות בספורט קבוצתי. מאמין שספורט הוא דרך חיים.',
+      isFriend: false,
+      isOnline: true,
+      joinDate: '2024-01-01',
+      lastActive: new Date().toISOString(),
       mutualFriends: 6,
-      interests: ['Docker', 'Kubernetes', 'CI/CD']
+      interests: ['כדורגל', 'כושר', 'תזונה', 'ריצה'],
+      avatarColor: '#06b6d4'
+    },
+    { 
+      id: 7, 
+      name: 'נעמי גולדברג', 
+      nickname: 'נעמי הסופרת',
+      email: 'naomi@example.com',
+      profession: 'סופרת ועורכת',
+      location: 'רמת גן',
+      bio: 'כותבת סיפורים קצרים ורומנים. אוהבת לקרוא ולדון בספרות.',
+      isFriend: true,
+      isOnline: true,
+      joinDate: '2023-05-20',
+      lastActive: new Date().toISOString(),
+      mutualFriends: 9,
+      interests: ['כתיבה', 'קריאה', 'שירה', 'תיאטרון'],
+      avatarColor: '#f43f5e'
+    },
+    { 
+      id: 8, 
+      name: 'דוד אברמוביץ', 
+      nickname: 'דודו המוזיקאי',
+      email: 'david@example.com',
+      profession: 'מוזיקאי ומלחין',
+      location: 'אשדוד',
+      bio: 'גיטריסט ומלחין. אוהב ג׳אז, בלוז ומוזיקה ישראלית.',
+      isFriend: false,
+      isOnline: false,
+      joinDate: '2022-12-10',
+      lastActive: new Date(Date.now() - 14400000).toISOString(),
+      mutualFriends: 4,
+      interests: ['גיטרה', 'הלחנה', 'ג׳אז', 'הופעות'],
+      avatarColor: '#a855f7'
+    },
+    { 
+      id: 9, 
+      name: 'רחל סגל', 
+      nickname: 'רחלי הבלוגרית',
+      email: 'rachel@example.com',
+      profession: 'בלוגרית אופנה',
+      location: 'הרצליה',
+      bio: 'בלוגרית אופנה וסטייל. משתפת טיפים לסטיילינג ואופנה בת קיימא.',
+      isFriend: true,
+      isOnline: true,
+      joinDate: '2023-08-05',
+      lastActive: new Date().toISOString(),
+      mutualFriends: 15,
+      interests: ['אופנה', 'עיצוב', 'צילום', 'קיימות'],
+      avatarColor: '#f97316'
     }
   ];
 
   useEffect(() => {
-    loadUsers();
+    loadUsersWithJQuery();
   }, []);
 
-  const loadUsers = async () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setUsers(dummyUsers);
-      setFilteredUsers(dummyUsers);
-      setIsLoading(false);
-    }, 800);
+  // טעינת משתמשים עם jQuery Ajax - דרישה 25
+  const loadUsersWithJQuery = () => {
+    $.ajax({
+      url: '/api/users',
+      method: 'GET',
+      beforeSend: function() {
+        setIsLoading(true);
+      },
+      success: function(data) {
+        // כרגע משתמשים בנתונים דמיוניים
+        setTimeout(() => {
+          setUsers(dummyUsers);
+          setFilteredUsers(dummyUsers);
+          setIsLoading(false);
+        }, 800);
+      },
+      error: function(xhr, status, error) {
+        console.error('Error loading users:', error);
+        // fallback
+        setUsers(dummyUsers);
+        setFilteredUsers(dummyUsers);
+        setIsLoading(false);
+      }
+    });
   };
 
+  // סינון מתקדם - דרישה 20
   useEffect(() => {
     let filtered = users;
 
@@ -191,11 +228,58 @@ function UserSearchPage() {
 
     // סינון לפי חיפוש
     if (query.trim()) {
+      const searchQuery = query.toLowerCase();
       filtered = filtered.filter((user) =>
-        user.name.toLowerCase().includes(query.toLowerCase()) ||
-        user.email.toLowerCase().includes(query.toLowerCase()) ||
-        user.profession.toLowerCase().includes(query.toLowerCase())
+        user.name.toLowerCase().includes(searchQuery) ||
+        user.email.toLowerCase().includes(searchQuery) ||
+        user.profession.toLowerCase().includes(searchQuery) ||
+        (user.nickname && user.nickname.toLowerCase().includes(searchQuery))
       );
+    }
+
+    // סינון מתקדם - 6 פרמטרים
+    if (showAdvancedSearch) {
+      // 1. מקצוע
+      if (advancedSearch.profession) {
+        filtered = filtered.filter(user => 
+          user.profession.toLowerCase().includes(advancedSearch.profession.toLowerCase())
+        );
+      }
+      
+      // 2. מיקום
+      if (advancedSearch.location) {
+        filtered = filtered.filter(user => 
+          user.location.toLowerCase().includes(advancedSearch.location.toLowerCase())
+        );
+      }
+      
+      // 3. תחומי עניין
+      if (advancedSearch.hasInterests) {
+        filtered = filtered.filter(user => 
+          user.interests && user.interests.some(interest => 
+            interest.toLowerCase().includes(advancedSearch.hasInterests.toLowerCase())
+          )
+        );
+      }
+      
+      // 4. חברים משותפים מינימום
+      if (advancedSearch.mutualFriendsMin) {
+        filtered = filtered.filter(user => 
+          user.mutualFriends >= parseInt(advancedSearch.mutualFriendsMin)
+        );
+      }
+      
+      // 5. תאריך הצטרפות
+      if (advancedSearch.joinedAfter) {
+        filtered = filtered.filter(user => 
+          new Date(user.joinDate) >= new Date(advancedSearch.joinedAfter)
+        );
+      }
+      
+      // 6. מחוברים בלבד
+      if (advancedSearch.onlineOnly) {
+        filtered = filtered.filter(user => user.isOnline);
+      }
     }
 
     // מיון
@@ -206,17 +290,103 @@ function UserSearchPage() {
       case 'alphabetical':
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
+      case 'mutualFriends':
+        filtered.sort((a, b) => b.mutualFriends - a.mutualFriends);
+        break;
       default:
         break;
     }
 
     setFilteredUsers(filtered);
-  }, [users, query, filterType, sortBy]);
+  }, [users, query, filterType, sortBy, advancedSearch, showAdvancedSearch]);
 
+  // פעולות CRUD - דרישה 19
   const handleAddFriend = (userId, user) => {
-    setUsers(prev => prev.map(u => 
-      u.id === userId ? { ...u, isFriend: !u.isFriend } : u
-    ));
+    $.ajax({
+      url: `/api/users/${userId}/friend`,
+      method: user.isFriend ? 'DELETE' : 'POST',
+      success: function(response) {
+        setUsers(prev => prev.map(u => 
+          u.id === userId ? { ...u, isFriend: !u.isFriend } : u
+        ));
+        
+        if (user.isFriend) {
+          alert(`הסרת את ${user.name} מרשימת החברים`);
+        } else {
+          alert(`בקשת חברות נשלחה ל-${user.name}`);
+        }
+      },
+      error: function(xhr) {
+        alert('שגיאה בביצוע הפעולה');
+      }
+    });
+  };
+
+  const handleUpdateUser = (userId) => {
+    // עדכון פרטי משתמש - דרישה 19 Update
+    const user = users.find(u => u.id === userId);
+    const newProfession = prompt('הכנס מקצוע חדש:', user.profession);
+    if (newProfession && newProfession !== user.profession) {
+      $.ajax({
+        url: `/api/users/${userId}`,
+        method: 'PUT',
+        data: JSON.stringify({ profession: newProfession }),
+        contentType: 'application/json',
+        success: function(response) {
+          setUsers(prev => prev.map(u => 
+            u.id === userId ? { ...u, profession: newProfession } : u
+          ));
+          alert('הפרטים עודכנו בהצלחה!');
+        },
+        error: function(xhr) {
+          alert('שגיאה בעדכון הפרטים');
+        }
+      });
+    }
+  };
+
+  const handleDeleteUser = (userId) => {
+    // מחיקת משתמש - דרישה 19 Delete (רק אדמין)
+    const user = users.find(u => u.id === userId);
+    if (window.confirm(`האם אתה בטוח שברצונך למחוק את ${user.name}?`)) {
+      $.ajax({
+        url: `/api/users/${userId}`,
+        method: 'DELETE',
+        success: function(response) {
+          setUsers(prev => prev.filter(u => u.id !== userId));
+          alert('המשתמש נמחק בהצלחה!');
+        },
+        error: function(xhr) {
+          if (xhr.status === 403) {
+            alert('אין לך הרשאה למחוק משתמשים');
+          } else {
+            alert('שגיאה במחיקת המשתמש');
+          }
+        }
+      });
+    }
+  };
+
+  const handleSendMessage = (userId, user) => {
+    // שליחת הודעה עם jQuery
+    const message = prompt(`כתוב הודעה ל-${user.name}:`);
+    if (message && message.trim()) {
+      $.ajax({
+        url: `/api/messages`,
+        method: 'POST',
+        data: JSON.stringify({
+          toUserId: userId,
+          message: message
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+          alert('ההודעה נשלחה בהצלחה!');
+        },
+        error: function(xhr) {
+          alert('שגיאה בשליחת ההודעה');
+        }
+      });
+    }
   };
 
   if (isLoading) {
@@ -258,6 +428,25 @@ function UserSearchPage() {
           <p className="page-subtitle">
             חפש וצור קשר עם אנשים מעניינים בקהילה שלנו
           </p>
+          
+          {/* HTML5 Video - דרישה 26.i */}
+          <div className="mt-3">
+            <video 
+              ref={videoRef}
+              width="400" 
+              height="300" 
+              controls
+              poster="video-poster.jpg"
+              style={{ 
+                borderRadius: '15px', 
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                display: 'none' 
+              }}>
+              <source src="users-intro.mp4" type="video/mp4" />
+              <source src="users-intro.webm" type="video/webm" />
+              הדפדפן שלך לא תומך בוידאו
+            </video>
+          </div>
         </div>
 
         {/* תיבת חיפוש */}
@@ -266,11 +455,116 @@ function UserSearchPage() {
             <SearchBox
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="חפש לפי שם, מקצוע או אימייל..."
+              placeholder="חפש לפי שם, כינוי, מקצוע או אימייל..."
               icon="🔍"
             />
+            
+            {/* כפתור חיפוש מתקדם */}
+            <div className="text-center mt-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}>
+                <span>🔧</span>
+                {showAdvancedSearch ? 'סגור חיפוש מתקדם' : 'חיפוש מתקדם'}
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* חיפוש מתקדם - דרישה 20 */}
+        {showAdvancedSearch && (
+          <div className="row justify-content-center mb-4">
+            <div className="col-lg-10">
+              <Card variant="glass" className="p-4">
+                <h4 className="text-white mb-3">חיפוש מתקדם - 6 פרמטרים</h4>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="text-white mb-1">מקצוע</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="לדוגמה: Developer"
+                      value={advancedSearch.profession}
+                      onChange={(e) => setAdvancedSearch({
+                        ...advancedSearch,
+                        profession: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="text-white mb-1">מיקום</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="לדוגמה: תל אביב"
+                      value={advancedSearch.location}
+                      onChange={(e) => setAdvancedSearch({
+                        ...advancedSearch,
+                        location: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="text-white mb-1">תחומי עניין</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="לדוגמה: React"
+                      value={advancedSearch.hasInterests}
+                      onChange={(e) => setAdvancedSearch({
+                        ...advancedSearch,
+                        hasInterests: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="text-white mb-1">חברים משותפים מינימום</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      placeholder="לדוגמה: 3"
+                      min="0"
+                      value={advancedSearch.mutualFriendsMin}
+                      onChange={(e) => setAdvancedSearch({
+                        ...advancedSearch,
+                        mutualFriendsMin: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="text-white mb-1">הצטרף אחרי</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={advancedSearch.joinedAfter}
+                      onChange={(e) => setAdvancedSearch({
+                        ...advancedSearch,
+                        joinedAfter: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div className="col-md-6 d-flex align-items-end">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="onlineOnly"
+                        checked={advancedSearch.onlineOnly}
+                        onChange={(e) => setAdvancedSearch({
+                          ...advancedSearch,
+                          onlineOnly: e.target.checked
+                        })}
+                      />
+                      <label className="form-check-label text-white" htmlFor="onlineOnly">
+                        מחוברים בלבד
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        )}
 
         {/* פאנל סינון ומיון */}
         <div className="row justify-content-center mb-5">
@@ -304,6 +598,7 @@ function UserSearchPage() {
                   onChange={(e) => setSortBy(e.target.value)}>
                   <option value="activity">⚡ הכי פעילים</option>
                   <option value="alphabetical">🔤 לפי א-ב</option>
+                  <option value="mutualFriends">👥 חברים משותפים</option>
                 </select>
               </div>
             </Card>
@@ -320,17 +615,20 @@ function UserSearchPage() {
               </p>
             </div>
             
-            {/* רשימת משתמשים בגריד */}
-            <div className="users-grid-container">
-              <div className="users-grid">
-                {filteredUsers.map((user) => (
+            {/* רשימת משתמשים בתצוגת Grid מעודכנת */}
+            <div className="users-grid-business">
+              {filteredUsers.map((user) => (
+                <div key={user.id}>
                   <UserCard
-                    key={user.id}
                     user={user}
                     onAddFriend={handleAddFriend}
+                    onSendMessage={handleSendMessage}
+                    onViewProfile={(userId) => {
+                      alert(`מציג פרופיל של ${user.name}`);
+                    }}
                   />
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </>
         ) : (
@@ -343,6 +641,24 @@ function UserSearchPage() {
               <p className="empty-state-description">
                 נסה לחפש במילים אחרות או שנה את הסינון
               </p>
+              
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setQuery('');
+                  setFilterType('הכל');
+                  setAdvancedSearch({
+                    profession: '',
+                    location: '',
+                    hasInterests: '',
+                    mutualFriendsMin: '',
+                    joinedAfter: '',
+                    onlineOnly: false
+                  });
+                  setShowAdvancedSearch(false);
+                }}>
+                נקה חיפוש
+              </Button>
             </div>
           </div>
         )}

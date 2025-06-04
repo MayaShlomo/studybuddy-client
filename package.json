@@ -9,10 +9,14 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
+    "d3": "^7.9.0",
+    "jquery": "^3.7.1",
+    "jquery-ui": "^1.14.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.1",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -25,7 +29,15 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "globals": {
+      "$": "readonly",
+      "jQuery": "readonly",
+      "confirm": "readonly"
+    },
+    "rules": {
+      "import/first": "off"
+    }
   },
   "browserslist": {
     "production": [
